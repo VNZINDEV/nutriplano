@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriPlano Pro | AI Diet & Training</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .input-modern {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        .input-modern:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            outline: none;
+        }
+
+        /* Loading Spinner */
+        .loader-core {
+            border: 4px solid rgba(99, 102, 241, 0.2);
+            border-left-color: #6366f1;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Tabs Styling */
+        .tab-btn { transition: all 0.2s ease-in-out; }
+        .tab-btn.active {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.4);
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="text-slate-800 antialiased pb-20">
+
+    <header class="sticky top-0 z-40 glass shadow-sm border-b border-white/50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-2.5 rounded-xl shadow-lg">
+                    <i class="fa-solid fa-bolt text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">NutriPlano Pro</h1>
+                    <p class="text-xs font-semibold text-slate-500 tracking-wider uppercase">Inteligência Artificial</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        
+        <section id="formSection" class="glass rounded-3xl shadow-xl p-6 md:p-10 mb-10">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-slate-800 mb-3">Crie seu plano perfeito</h2>
+                <p class="text-slate-500 max-w-2xl mx-auto">Preencha seus dados reais. Nossa Inteligência Artificial vai analisar seu biotipo e gerar um cardápio e uma rotina de treinos ABC sob medida.</p>
+            </div>
+            
+            <form id="userForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Gênero -->
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-venus-mars text-indigo-500"></i> Gênero
+                    </label>
+                    <select id="gender" class="input-modern w-full rounded-xl p-3.5 text-slate-700">
+                        <option value="masculino">Masculino</option>
+                        <option value="feminino">Feminino</option>
+                    </select>
+                </div>
+
+                <!-- Idade -->
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i class="fa-regular fa-calendar text-indigo-500"></i> Idade
+                    </label>
+                    <input type="number" id="age" min="10" max="100" required class="input-modern w-full rounded-xl p-3.5 text-slate-700" placeholder="Ex: 25">
+                </div>
+
+                <!-- Peso -->
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-weight-scale text-indigo-500"></i> Peso (kg)
+                    </label>
+                    <input type="number" id="weight" step="0.1" required class="input-modern w-full rounded-xl p-3.5 text-slate-700" placeholder="Ex: 75.5">
+                </div>
+
+                <!-- Altura -->
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-ruler-vertical text-indigo-500"></i> Altura (cm)
+                    </label>
+                    <input type="number" id="height" required class="input-modern w-full rounded-xl p-3.5 text-slate-700" placeholder="Ex: 175">
+                </div>
+
+                <!-- Atividade -->
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-person-running text-indigo-500"></i> Rotina
+                    </label>
+                    <select id="activity" class="input-modern w-full rounded-xl p-3.5 text-slate-700">
+                        <option value="1.2">Sedentário (Trabalho em mesa)</option>
+                        <option value="1.375">Levemente Ativo (Exercício leve 1-3x)</option>
+                        <option value="1.55">Moderado (Treino 3-5x semana)</option>
+                        <option value="1.725">Muito Ativo (Treino pesado diário)</option>
+                    </select>
+                </div>
+
+                <!-- Objetivo -->
+                <div class="space-y-2">
+                    <label class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                        <i class="fa-solid fa-bullseye text-indigo-500"></i> Objetivo
+                    </label>
+                    <select id="goal" class="input-modern w-full rounded-xl p-3.5 text-slate-700">
+                        <option value="emagrecer">Emagrecimento (Perda de gordura)</option>
+                        <option value="manter">Recomposição (Trocar gordura por massa)</option>
+                        <option value="ganhar">Hipertrofia (Ganho de massa brutal)</option>
+                    </select>
+                </div>
+
+                <!-- Botão Submit -->
+                <div class="md:col-span-2 lg:col-span-3 mt-6">
+                    <button type="button" onclick="iniciarGeracao()" class="w-full relative overflow-hidden group bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white font-bold py-5 rounded-2xl shadow-[0_10px_20px_-10px_rgba(99,102,241,0.7)] hover:shadow-[0_15px_30px_-10px_rgba(99,102,241,0.8)] transform transition-all hover:-translate-y-1 flex justify-center items-center gap-3 text-lg bg-[length:200%_auto] hover:bg-[position:right_center]">
+                        <i class="fa-solid fa-brain text-2xl group-hover:animate-bounce"></i> 
+                        <span>Gerar Plano Inteligente</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <div id="loadingState" class="hidden text-center py-20 glass rounded-3xl">
+            <div class="loader-core mx-auto mb-8"></div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-2">Construindo seu plano...</h3>
+            <p class="text-slate-500 max-w-md mx-auto">Nossa IA está cruzando dados metabólicos para estruturar a dieta perfeita e dividindo seus treinos em A, B e C.</p>
+        </div>
+
+        <section id="resultsArea" class="hidden">
+            <h2 class="text-4xl font-extrabold text-center mb-10 text-slate-800">Seu <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Dossiê Completo</span></h2>
+
+            <!-- Cards de Macros -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <div class="glass p-5 rounded-3xl text-center border-t-4 border-t-blue-500 shadow-md transform hover:-translate-y-1 transition">
+                    <div class="w-10 h-10 mx-auto bg-blue-100 rounded-full flex items-center justify-center text-blue-500 mb-3"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Calorias</p>
+                    <p id="resCalories" class="text-2xl font-black text-slate-800 mt-1">--</p>
+                </div>
+                <div class="glass p-5 rounded-3xl text-center border-t-4 border-t-rose-500 shadow-md transform hover:-translate-y-1 transition">
+                    <div class="w-10 h-10 mx-auto bg-rose-100 rounded-full flex items-center justify-center text-rose-500 mb-3"><i class="fa-solid fa-drumstick-bite"></i></div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Proteínas</p>
+                    <p id="resProtein" class="text-2xl font-black text-slate-800 mt-1">--</p>
+                </div>
+                <div class="glass p-5 rounded-3xl text-center border-t-4 border-t-amber-500 shadow-md transform hover:-translate-y-1 transition">
+                    <div class="w-10 h-10 mx-auto bg-amber-100 rounded-full flex items-center justify-center text-amber-500 mb-3"><i class="fa-solid fa-wheat-awn"></i></div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Carboidratos</p>
+                    <p id="resCarbs" class="text-2xl font-black text-slate-800 mt-1">--</p>
+                </div>
+                <div class="glass p-5 rounded-3xl text-center border-t-4 border-t-teal-500 shadow-md transform hover:-translate-y-1 transition">
+                    <div class="w-10 h-10 mx-auto bg-teal-100 rounded-full flex items-center justify-center text-teal-500 mb-3"><i class="fa-solid fa-droplet"></i></div>
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Gorduras</p>
+                    <p id="resFats" class="text-2xl font-black text-slate-800 mt-1">--</p>
+                </div>
+            </div>
+
+            <!-- Dieta e Treino -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Dieta Column -->
+                <div class="lg:col-span-5">
+                    <div class="glass rounded-3xl shadow-lg overflow-hidden flex flex-col h-full">
+                        <div class="bg-gradient-to-r from-emerald-500 to-teal-500 p-6 text-white text-center">
+                            <i class="fa-solid fa-leaf text-4xl mb-2"></i>
+                            <h3 class="text-2xl font-bold">Plano Alimentar</h3>
+                            <p class="text-teal-100 text-sm mt-1">Refeições projetadas para seu objetivo</p>
+                        </div>
+                        <div id="dietaContainer" class="p-6 space-y-4 flex-grow bg-white/40">
+                            <!-- Injetado via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Treino Column -->
+                <div class="lg:col-span-7">
+                    <div class="glass rounded-3xl shadow-lg overflow-hidden flex flex-col h-full">
+                        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white text-center relative">
+                            <i class="fa-solid fa-dumbbell text-4xl mb-2"></i>
+                            <h3 class="text-2xl font-bold">Rotina de Treinos</h3>
+                            <p class="text-indigo-100 text-sm mt-1">Divisão ABC com vídeos explicativos</p>
+                        </div>
+                        
+                        <div class="bg-white/80 p-2 flex justify-center gap-2 border-b border-slate-200">
+                            <button onclick="switchTab('A')" id="btnTabA" class="tab-btn active px-6 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-100 w-1/3 text-center">Treino A</button>
+                            <button onclick="switchTab('B')" id="btnTabB" class="tab-btn px-6 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-100 w-1/3 text-center">Treino B</button>
+                            <button onclick="switchTab('C')" id="btnTabC" class="tab-btn px-6 py-2.5 rounded-xl font-bold text-sm text-slate-600 hover:bg-slate-100 w-1/3 text-center">Treino C</button>
+                        </div>
+
+                        <div class="p-6 flex-grow bg-white/40">
+                            <!-- Treino A -->
+                            <div id="tabContentA" class="tab-content active">
+                                <h4 id="focoA" class="text-lg font-bold text-indigo-700 mb-4 border-l-4 border-indigo-500 pl-3">Foco: Carregando...</h4>
+                                <div id="listaTreinoA" class="space-y-3"></div>
+                            </div>
+                            <!-- Treino B -->
+                            <div id="tabContentB" class="tab-content">
+                                <h4 id="focoB" class="text-lg font-bold text-purple-700 mb-4 border-l-4 border-purple-500 pl-3">Foco: Carregando...</h4>
+                                <div id="listaTreinoB" class="space-y-3"></div>
+                            </div>
+                            <!-- Treino C -->
+                            <div id="tabContentC" class="tab-content">
+                                <h4 id="focoC" class="text-lg font-bold text-pink-700 mb-4 border-l-4 border-pink-500 pl-3">Foco: Carregando...</h4>
+                                <div id="listaTreinoC" class="space-y-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toastNotification" class="fixed bottom-6 right-6 w-[90%] md:w-auto max-w-md bg-slate-900 text-white p-5 rounded-2xl shadow-2xl transition-all duration-500 translate-y-32 opacity-0 z-50 flex items-start gap-4 border border-slate-700">
+        <div id="toastIconContainer" class="bg-rose-500/20 text-rose-400 p-2 rounded-lg">
+            <i id="toastIcon" class="fa-solid fa-triangle-exclamation text-xl"></i>
+        </div>
+        <div class="flex-grow">
+            <h4 id="toastTitle" class="font-bold text-base text-white">Aviso</h4>
+            <p id="toastMsg" class="text-sm text-slate-300 mt-1 leading-relaxed">Mensagem.</p>
+        </div>
+        <button onclick="hideToast()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+
+    <script>
+        // Utilizando a chave que você passou nas interações anteriores
+        // A API vai receber no cabeçalho x-goog-api-key que suporta chaves 'AQ.'
+        const apiKey = "AQ.Ab8RN6JSy3mh_3ElX7gRViMYK86-uz-VF2Yef7p4YGKMQDV3Mw";
+
+        // Funções de Interface Visual (Toast e Tabs)
+        function showToast(title, message, type = 'error') {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastTitle').innerText = title;
+            document.getElementById('toastMsg').innerText = message;
+            
+            const iconContainer = document.getElementById('toastIconContainer');
+            const icon = document.getElementById('toastIcon');
+            
+            if(type === 'error') {
+                iconContainer.className = "bg-rose-500/20 text-rose-400 p-2 rounded-lg";
+                icon.className = "fa-solid fa-triangle-exclamation text-xl";
+            } else if(type === 'success') {
+                iconContainer.className = "bg-emerald-500/20 text-emerald-400 p-2 rounded-lg";
+                icon.className = "fa-solid fa-check-double text-xl";
+            } else {
+                iconContainer.className = "bg-amber-500/20 text-amber-400 p-2 rounded-lg";
+                icon.className = "fa-solid fa-circle-info text-xl";
+            }
+
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(hideToast, 8000);
+        }
+
+        function hideToast() {
+            document.getElementById('toastNotification').classList.add('translate-y-32', 'opacity-0');
+        }
+
+        function switchTab(tabId) {
+            // Remove active classes
+            ['A', 'B', 'C'].forEach(id => {
+                document.getElementById(`btnTab${id}`).classList.remove('active');
+                document.getElementById(`tabContent${id}`).classList.remove('active');
+            });
+            // Add active to selected
+            document.getElementById(`btnTab${tabId}`).classList.add('active');
+            document.getElementById(`tabContent${tabId}`).classList.add('active');
+        }
+
+        async function iniciarGeracao() {
+            const age = document.getElementById('age').value;
+            const weight = document.getElementById('weight').value;
+            const height = document.getElementById('height').value;
+            
+            if(!age || !weight || !height) {
+                showToast("Dados Incompletos", "Por favor, preencha sua idade, peso e altura para gerarmos o plano exato.", "warning");
+                return;
+            }
+
+            const userData = {
+                gender: document.getElementById('gender').value,
+                age: parseInt(age),
+                weight: parseFloat(weight),
+                height: parseFloat(height),
+                activity: parseFloat(document.getElementById('activity').value),
+                goal: document.getElementById('goal').value
+            };
+
+            // Cálculo Basal (Mifflin-St Jeor)
+            let bmr = userData.gender === 'masculino' 
+                ? (10 * userData.weight) + (6.25 * userData.height) - (5 * userData.age) + 5
+                : (10 * userData.weight) + (6.25 * userData.height) - (5 * userData.age) - 161;
+
+            let targetCalories = bmr * userData.activity;
+            if (userData.goal === 'emagrecer') targetCalories -= 500;
+            if (userData.goal === 'ganhar') targetCalories += 400;
+
+            const protein = (userData.weight * 2.0).toFixed(0);
+            const fat = (userData.weight * 0.8).toFixed(0);
+            const carbs = ((targetCalories - (protein * 4) - (fat * 9)) / 4).toFixed(0);
+
+            // Atualiza UI de Macros antecipadamente
+            document.getElementById('resCalories').innerText = Math.round(targetCalories) + ' kcal';
+            document.getElementById('resProtein').innerText = protein + 'g';
+            document.getElementById('resCarbs').innerText = carbs + 'g';
+            document.getElementById('resFats').innerText = fat + 'g';
+
+            document.getElementById('resultsArea').classList.add('hidden');
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
+
+            try {
+                const aiData = await requisitarGeminiAI(userData, targetCalories, protein, carbs, fat);
+                renderizarInterface(aiData);
+                showToast("Sucesso!", "Seu plano foi gerado perfeitamente pela IA.", "success");
+            } catch (error) {
+                console.error("Erro na IA:", error);
+                showToast("Conexão com IA falhou", `Erro: ${error.message}. Carregando plano estático de segurança.`, "error");
+                renderizarInterface(gerarPlanoEstatico(userData.goal));
+            }
+
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('resultsArea').classList.remove('hidden');
+            document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Forçar ativação da Aba A
+            switchTab('A');
+        }
+
+        async function requisitarGeminiAI(userData, calorias, proteinas, carbs, gorduras) {
+            // Usando gemini-3-flash-preview conforme as melhores práticas de modelos recentes
+            const modelUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent`;
+
+            const promptText = `
+            Atue como o melhor Nutricionista Clínico e Personal Trainer esportivo.
+            Crie um plano completo para: Gênero: ${userData.gender}, Idade: ${userData.age}, Peso: ${userData.weight}kg, Altura: ${userData.height}cm.
+            O objetivo é ${userData.goal}. A meta diária é consumir ${Math.round(calorias)} kcal (${proteinas}g Prot, ${carbs}g Carb, ${gorduras}g Gord).
+
+            Forneça uma dieta saborosa e um treino dividido em 3 dias (A, B e C).
+            Retorne APENAS um JSON válido. Siga ESTRITAMENTE a estrutura abaixo, sem marcações markdown como \`\`\`json:
+            {
+                "dieta": [
+                    { "refeicao": "Café da Manhã", "alimentos": "Ovos mexidos com...", "calorias": "400" },
+                    { "refeicao": "Almoço", "alimentos": "...", "calorias": "600" }
+                ],
+                "treinos": {
+                    "A": {
+                        "foco": "Peito e Tríceps",
+                        "exercicios": [
+                            { "nome": "Supino Reto com Barra", "series": "4x10", "busca_youtube": "como fazer supino reto com barra execução" }
+                        ]
+                    },
+                    "B": {
+                        "foco": "Costas e Bíceps",
+                        "exercicios": [
+                            { "nome": "Puxada Frontal", "series": "4x12", "busca_youtube": "puxada frontal polia execução" }
+                        ]
+                    },
+                    "C": {
+                        "foco": "Pernas Completas",
+                        "exercicios": [
+                            { "nome": "Agachamento Livre", "series": "4x10", "busca_youtube": "agachamento livre execução correta" }
+                        ]
+                    }
+                }
+            }`;
+
+            // Configurando payload com responseMimeType para forçar JSON e evitar texto markdown indesejado
+            const payload = {
+                contents: [{ parts: [{ text: promptText }] }],
+                generationConfig: { 
+                    temperature: 0.7,
+                    responseMimeType: "application/json" 
+                }
+            };
+
+            const response = await fetch(modelUrl, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': apiKey // Header recomendado para chaves AQ.
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                let errorMsg = response.statusText;
+                if(errorData.error && errorData.error.message) {
+                    errorMsg = errorData.error.message;
+                }
+                throw new Error(errorMsg);
+            }
+
+            const data = await response.json();
+            
+            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                let textOutput = data.candidates[0].content.parts[0].text;
+                // Como forçamos application/json, a resposta já deve ser um JSON limpo, 
+                // mas limpamos backticks por segurança caso a IA desobedeça.
+                textOutput = textOutput.replace(/```json/gi, '').replace(/```/g, '').trim();
+                return JSON.parse(textOutput);
+            } else {
+                throw new Error("Formato de resposta inesperado da IA.");
+            }
+        }
+
+        function gerarPlanoEstatico(goal) {
+            let dieta = [
+                { refeicao: "Café da Manhã", alimentos: "3 ovos mexidos, 2 fatias de pão integral, café sem açúcar", calorias: "350" },
+                { refeicao: "Almoço", alimentos: "150g frango grelhado, 150g arroz, salada verde à vontade", calorias: "450" },
+                { refeicao: "Lanche da Tarde", alimentos: "Iogurte proteico com chia e 1 fruta", calorias: "200" },
+                { refeicao: "Jantar", alimentos: "150g carne moída patinho, legumes no vapor", calorias: "400" }
+            ];
+
+            let treinos = {
+                "A": {
+                    foco: "Peito, Ombro e Tríceps",
+                    exercicios: [
+                        { nome: "Supino Reto com Halteres", series: "4x 10 a 12", busca_youtube: "supino reto com halteres correta" },
+                        { nome: "Desenvolvimento de Ombros", series: "3x 12", busca_youtube: "desenvolvimento ombros halter" },
+                        { nome: "Tríceps Pulley", series: "4x 15", busca_youtube: "triceps pulley barra reta" }
+                    ]
+                },
+                "B": {
+                    foco: "Costas e Bíceps",
+                    exercicios: [
+                        { nome: "Puxada Aberta na Polia", series: "4x 10", busca_youtube: "puxada aberta polia alta" },
+                        { nome: "Remada Curvada", series: "3x 12", busca_youtube: "remada curvada barra" },
+                        { nome: "Rosca Direta", series: "4x 12", busca_youtube: "rosca direta barra W" }
+                    ]
+                },
+                "C": {
+                    foco: "Pernas e Panturrilhas",
+                    exercicios: [
+                        { nome: "Agachamento Livre", series: "4x 10", busca_youtube: "agachamento livre" },
+                        { nome: "Leg Press 45", series: "3x 12", busca_youtube: "leg press 45" },
+                        { nome: "Cadeira Extensora", series: "3x 15 ate a falha", busca_youtube: "cadeira extensora" }
+                    ]
+                }
+            };
+            return { dieta, treinos };
+        }
+
+        function renderizarInterface(dados) {
+            const dietaContainer = document.getElementById('dietaContainer');
+            dietaContainer.innerHTML = '';
+
+            // Renderizar Dieta
+            if(dados.dieta) {
+                dados.dieta.forEach(item => {
+                    dietaContainer.innerHTML += `
+                        <div class="bg-white border border-slate-100 p-4 rounded-2xl shadow-sm hover:shadow-md transition">
+                            <div class="flex justify-between items-start mb-2">
+                                <h4 class="font-extrabold text-slate-800 text-lg flex items-center gap-2"><i class="fa-regular fa-clock text-teal-500"></i> ${item.refeicao}</h4>
+                                <span class="text-xs bg-teal-100 text-teal-800 px-2.5 py-1 rounded-full font-bold shadow-sm">${item.calorias} kcal</span>
+                            </div>
+                            <p class="text-sm text-slate-600 ml-6 leading-relaxed">${item.alimentos}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            // Renderizar Treinos
+            const renderTreino = (id, treinoData) => {
+                const focoEl = document.getElementById(`foco${id}`);
+                const listaEl = document.getElementById(`listaTreino${id}`);
+                
+                focoEl.innerText = `Foco: ${treinoData.foco}`;
+                listaEl.innerHTML = '';
+
+                treinoData.exercicios.forEach(ex => {
+                    listaEl.innerHTML += `
+                        <div class="bg-white border border-slate-200 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm hover:border-indigo-300 transition">
+                            <div>
+                                <h5 class="font-bold text-slate-800 text-base">${ex.nome}</h5>
+                                <p class="text-xs text-indigo-600 font-bold bg-indigo-50 inline-block px-2 py-0.5 rounded-md mt-1">Séries: ${ex.series}</p>
+                            </div>
+                            <button onclick="openVideoModal('${ex.busca_youtube}')" class="whitespace-nowrap text-sm bg-slate-900 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-youtube text-red-500"></i> Ver Execução
+                            </button>
+                        </div>
+                    `;
+                });
+            };
+
+            if(dados.treinos) {
+                if(dados.treinos.A) renderTreino('A', dados.treinos.A);
+                if(dados.treinos.B) renderTreino('B', dados.treinos.B);
+                if(dados.treinos.C) renderTreino('C', dados.treinos.C);
+            }
+        }
+
+        function openVideoModal(queryBusca) {
+            // Usa o link nativo de busca do YouTube. Em janela popup funciona 100% livre de bloqueios de iframe.
+            const urlFormatada = `https://www.youtube.com/results?search_query=${encodeURIComponent(queryBusca)}`;
+            
+            const w = 850;
+            const h = 650;
+            const left = (screen.width / 2) - (w / 2);
+            const top = (screen.height / 2) - (h / 2);
+            
+            window.open(urlFormatada, "Execução_do_Exercicio", `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, copyhistory=no, width=${w}, height=${h}, top=${top}, left=${left}`);
+        }
+    </script>
+</body>
+</html>
